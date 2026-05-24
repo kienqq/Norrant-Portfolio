@@ -1,0 +1,336 @@
+"use client";
+
+import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef } from "react";
+import RevealText from "./RevealText";
+
+const assetPath = (path: string) =>
+  `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
+
+export type Project = {
+  id: string;
+  title: string;
+  category: string;
+  tags: string[];
+  year: string;
+  description: string;
+  color: string;
+  accent: string;
+  image: string;
+  size: "large" | "small";
+  details: {
+    overview: string;
+    approach: string[];
+    bullets: string[];
+    stack: string[];
+    outcome: string;
+    status?: "in-progress" | "complete";
+    gallery?: { src: string; caption: string }[];
+  };
+};
+
+export const projects: Project[] = [
+  {
+    id: "01",
+    title: "Lean Six Sigma",
+    category: "Process Engineering",
+    tags: ["Minitab", "Six Sigma", "Regression"],
+    year: "2025",
+    description:
+      "Root cause analysis and process optimization for a garment manufacturing bottleneck — 33% rework rate reduction.",
+    color: "#0d1a14",
+    accent: "#10b981",
+    image: assetPath("/images/lean-thumbnail.png"),
+    size: "large",
+    details: {
+      overview:
+        "Applied DMAIC methodology to identify and eliminate the root cause of rework at a critical bottleneck stage in garment production. Used statistical tools to move from symptom to verified root cause before implementing any fix.",
+      approach: [
+        "Scoped the problem to the bottleneck stage; collected 30-day rework and process time data across operators and shifts.",
+        "Narrowed from 8 suspected causes to 2 root causes using Regression Analysis and 5M Fishbone diagrams in Minitab.",
+        "Validated the control plan over a 2-week pilot, confirmed stability, then handed off to the production team.",
+      ],
+      bullets: [
+        "Pinpointed root causes of rework at the critical bottleneck stage by running Regression Analysis, 5 Whys, and 5M Fishbone diagrams on Garment Perfection and Process Time datasets in Minitab.",
+        "Reduced rework rate by 33% by standardizing the bottleneck stage and piloting a control plan validated for stability before handoff.",
+      ],
+      stack: ["Minitab", "DMAIC", "Regression Analysis", "Fishbone Diagram", "5 Whys"],
+      outcome: "33% rework rate reduction",
+      status: "complete",
+      gallery: [
+        {
+          src: assetPath("/images/lean-regression.png"),
+          caption: "Regression Analysis (Minitab) — Fitted Line Plots showing the relationship between Process Time and two sub-steps (Placing shirt on table, Folding shirt). Used to narrow root causes from 8 suspects to 2 confirmed drivers.",
+        },
+        {
+          src: assetPath("/images/lean-hypothesis.png"),
+          caption: "Hypothesis Testing — Before vs. After histograms of Total Process Time. p-value = 0.000 confirms the improvement is statistically significant, not random variation.",
+        },
+        {
+          src: assetPath("/images/lean-results.png"),
+          caption: "Evaluation Results — Rework rate dropped from 14.88% to 5% (67% reduction), cycle time reduced from 51.97s to 29.79s. All 5 improvement criteria met or exceeded target.",
+        },
+        {
+          src: assetPath("/images/lean-control-chart.png"),
+          caption: "Process Control Chart (I-MR) — Rework data after improvement. Majority of points = 0 (no redo), occasional spikes are Special Cause events. Confirms the process is now statistically controlled.",
+        },
+      ],
+    },
+  },
+  {
+    id: "02",
+    title: "Content Performance Analytics",
+    category: "Data Analytics",
+    tags: ["Python", "Apify API", "Dashboard"],
+    year: "2026",
+    description:
+      "End-to-end content analytics pipeline — scraped 70 competitor videos, built a heuristic viral scoring model, visualized weekly channel performance.",
+    color: "#1a1400",
+    accent: "#f59e0b",
+    image: assetPath("/images/content-dashboard.png"),
+    size: "large",
+    details: {
+      overview:
+        "Built a data-driven content strategy pipeline for a self-run short-form video channel. Covered two phases: competitor intelligence (what performs well in the niche) and own-channel performance modeling (how the algorithm responds to a new account).",
+      approach: [
+        "Scraped 70 competitor videos via Apify API; structured data across hook type, topic cluster, and posting time to identify patterns in the niche.",
+        "Built a heuristic weighted scoring model using Watch Full %, Save Rate, and Like Rate — weights calibrated to new-account cold-start algorithm signals observed in own-channel data.",
+        "Tracked own-channel metrics weekly across 12 published videos; built an HTML dashboard in Python to surface patterns across views, save rate, watch time, and viral score.",
+      ],
+      bullets: [
+        "Identified content performance patterns for a self-run short-form video channel by scraping 70 competitor videos via Apify API and mining patterns across hook type, topic cluster, and posting time in Python.",
+        "Quantified TikTok algorithm response signals for a new-account cold-start context by designing a weighted scoring model using Watch Full %, Save Rate, and Like Rate — avg views per video increased 141% week-over-week across 12 published videos.",
+        "Visualized weekly content performance data across views, save rate, watch time, and viral score by building an HTML dashboard in Python — enabling clearer pattern identification and data-driven content decisions.",
+      ],
+      stack: ["Python", "Apify API", "HTML Dashboard", "Data Mining", "Weighted Scoring Model"],
+      outcome: "Avg views/video +141% week-over-week",
+      status: "in-progress",
+      gallery: [
+        {
+          src: assetPath("/images/content-dashboard.png"),
+          caption: "Performance Dashboard — Built in Python. Tracks weekly Views trend, ER + Save Rate over time, and all-time per-episode breakdown across 16 published videos.",
+        },
+        {
+          src: assetPath("/images/content-data-table.png"),
+          caption: "Per-Episode Data Table — Real metrics from the live TikTok account. Each row shows Views, ER, Save Rate, Watch Full %, Followers gained, and algorithm Verdict (Good / Watch / Low) per episode.",
+        },
+      ],
+    },
+  },
+  {
+    id: "03",
+    title: "Sales Forecasting Pipeline",
+    category: "Machine Learning",
+    tags: ["Python", "LightGBM", "SHAP"],
+    year: "2026",
+    description:
+      "Multi-agent ML pipeline for manufacturing revenue forecasting — LightGBM with SHAP explainability, quantile regression for prediction intervals, data drift detection.",
+    color: "#0a0f1a",
+    accent: "#60a5fa",
+    image: assetPath("/images/sales-forecasting.svg"),
+    size: "small",
+    details: {
+      overview:
+        "Designed a modular forecasting system for a make-to-stock manufacturer, addressing the asymmetric cost problem: underpredicting (stockout, lost orders) is more costly than overpredicting (excess inventory). Architecture built with agent-based modularity so each component can be updated independently as new data arrives.",
+      approach: [
+        "Designed modular agent architecture: data audit → feature engineering → model training → SHAP explainability, so each layer can be updated independently as new production data arrives.",
+        "Configured LightGBM quantile regression for 90% prediction intervals to handle asymmetric stockout vs overstock cost — underpredicting carries higher business cost in this context.",
+        "Built a data drift detection module to flag distribution shifts as the time series expands, preventing stale model assumptions from compounding forecast errors.",
+      ],
+      bullets: [
+        "Designed a sales forecasting pipeline for manufacturing revenue prediction by building modular agents for data auditing, feature engineering, model training, and SHAP-based explainability in Python.",
+        "Addressed asymmetric forecasting risk in a make-to-stock context by configuring LightGBM quantile regression for 90% prediction intervals and implementing a data drift detection module for expanding time series data.",
+      ],
+      stack: ["Python", "LightGBM", "scikit-learn", "SHAP", "Optuna", "pandas"],
+      outcome: "In progress — architecture complete, awaiting production data",
+      status: "in-progress",
+    },
+  },
+];
+
+function ProjectCard({
+  project,
+  index,
+  onSelect,
+}: {
+  project: Project;
+  index: number;
+  onSelect: (p: Project) => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+
+  // 3D tilt
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-150, 150], [6, -6]), { stiffness: 150, damping: 16 });
+  const rotateY = useSpring(useTransform(mouseX, [-150, 150], [-6, 6]), { stiffness: 150, damping: 16 });
+
+  const handleTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left - rect.width / 2);
+    mouseY.set(e.clientY - rect.top - rect.height / 2);
+  };
+  const handleTiltReset = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: (index % 3) * 0.1 }}
+      onClick={() => onSelect(project)}
+      onMouseMove={handleTilt}
+      onMouseLeave={handleTiltReset}
+      className={`group relative cursor-pointer rounded-2xl overflow-hidden ${
+        project.size === "large" ? "md:col-span-2" : "md:col-span-1"
+      }`}
+      style={{
+        background: "rgba(255,255,255,0.70)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        border: "1px solid rgba(255,255,255,0.85)",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)",
+        rotateX,
+        rotateY,
+        transformPerspective: 1200,
+        transformStyle: "preserve-3d",
+      }}
+      whileHover={{
+        y: -6,
+        boxShadow: "0 16px 48px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9)",
+        transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+      }}
+    >
+      {/* Image */}
+      <div className="relative w-full overflow-hidden" style={{ height: project.size === "large" ? "200px" : "150px" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={project.image}
+          alt={project.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          style={{ objectPosition: "center center" }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = assetPath("/images/content-dashboard.png");
+          }}
+        />
+        {/* Gradient fade to card */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(to bottom, rgba(255,255,255,0) 40%, rgba(255,255,255,0.92) 100%)",
+          }}
+        />
+        {/* ID badge */}
+        <span className="absolute top-3 left-4 text-[10px] font-mono text-white/80 bg-black/25 px-2 py-0.5 rounded-full backdrop-blur-sm">
+          {project.id}
+        </span>
+
+        {/* Status badge */}
+        <span className="absolute bottom-3 left-4 flex items-center gap-1.5 text-[10px] font-medium text-white px-2.5 py-1 rounded-full backdrop-blur-sm"
+          style={{ background: project.details.status === "complete" ? "rgba(16,185,129,0.75)" : "rgba(0,0,0,0.40)" }}
+        >
+          {project.details.status === "in-progress" && (
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+          )}
+          {project.details.status === "complete" ? "Done" : "On Progress"}
+        </span>
+        {/* Tags */}
+        <div className="absolute top-3 right-3 flex flex-wrap gap-1.5 justify-end">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-[10px] px-2.5 py-0.5 rounded-full text-white/90 uppercase tracking-wide backdrop-blur-sm"
+              style={{ background: "rgba(0,0,0,0.30)" }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col justify-between p-5 md:p-6" style={{ minHeight: project.size === "large" ? "160px" : "140px" }}>
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span
+              className="text-[10px] px-2.5 py-0.5 rounded-full font-medium uppercase tracking-wider"
+              style={{ background: project.accent + "18", color: project.accent }}
+            >
+              {project.category}
+            </span>
+            <span className="text-[10px] text-[#9090a8]">{project.year}</span>
+          </div>
+          <h3 className="text-lg md:text-xl font-bold text-[#0d0d14] mb-1.5 leading-tight">
+            {project.title}
+          </h3>
+          <p className="text-xs text-[#606078] leading-relaxed">
+            {project.description}
+          </p>
+        </div>
+
+        {/* Arrow link */}
+        <div className="mt-4 flex items-center gap-2 text-xs text-[#9090a8] group-hover:text-[#0d0d14] transition-colors duration-200">
+          <span>View project</span>
+          <svg
+            className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1"
+            viewBox="0 0 12 12"
+            fill="none"
+          >
+            <path
+              d="M1 6h10M6 1l5 5-5 5"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function Projects({ onSelect }: { onSelect: (p: Project) => void }) {
+  const titleRef = useRef<HTMLDivElement>(null);
+  const titleInView = useInView(titleRef, { once: true, margin: "-60px" });
+
+  return (
+    <section id="work" className="px-6 md:px-10 py-24 md:py-32">
+      {/* Section header */}
+      <div ref={titleRef} className="flex items-end justify-between mb-12">
+        <div>
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={titleInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="text-[10px] text-[#9090a8] uppercase tracking-[0.2em] mb-3"
+          >
+            Selected work
+          </motion.p>
+          <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-black uppercase tracking-tighter text-[#0d0d14] leading-none">
+            <RevealText text="Projects" stagger={0.05} duration={0.75} />
+          </h2>
+        </div>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={titleInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="hidden md:block text-xs text-[#9090a8] text-right max-w-[200px]"
+        >
+          Data analytics, process engineering, and ML systems.
+        </motion.p>
+      </div>
+
+      {/* Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {projects.map((project, i) => (
+          <ProjectCard key={project.id} project={project} index={i} onSelect={onSelect} />
+        ))}
+      </div>
+    </section>
+  );
+}
