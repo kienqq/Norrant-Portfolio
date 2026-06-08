@@ -93,7 +93,7 @@ export const projects: Project[] = [
     tags: ["Python", "Apify API", "Dashboard"],
     year: "2026",
     description:
-      "End-to-end content analytics pipeline — scraped 70 competitor videos, built a heuristic viral scoring model, visualized weekly channel performance.",
+      "End-to-end content analytics pipeline — scraped 70 competitor videos, built a heuristic viral scoring model, tracked 23 published videos across 5 weeks. 12,284 total views · ER trend 4.8% → 7.0%.",
     color: "#1a1400",
     accent: "#f59e0b",
     image: assetPath("/images/content-dashboard.png"),
@@ -104,20 +104,20 @@ export const projects: Project[] = [
       approach: [
         "Scraped 70 competitor videos via Apify API; structured data across hook type, topic cluster, and posting time to identify patterns in the niche.",
         "Built a heuristic weighted scoring model using Watch Full %, Save Rate, and Like Rate — weights calibrated to new-account cold-start algorithm signals observed in own-channel data.",
-        "Tracked own-channel metrics weekly across 12 published videos; built an HTML dashboard in Python to surface patterns across views, save rate, watch time, and viral score.",
+        "Tracked own-channel metrics weekly across 23 published videos (W19–W23); built an HTML dashboard in Python surfacing views trend, ER, save rate, and viral score — 12,284 total views, ER improved from 4.8% to 7.0%, 18 followers gained.",
       ],
       bullets: [
         "Identified content performance patterns for a self-run short-form video channel by scraping 70 competitor videos via Apify API and mining patterns across hook type, topic cluster, and posting time in Python.",
-        "Quantified TikTok algorithm response signals for a new-account cold-start context by designing a weighted scoring model using Watch Full %, Save Rate, and Like Rate — avg views per video increased 141% week-over-week across 12 published videos.",
-        "Visualized weekly content performance data across views, save rate, watch time, and viral score by building an HTML dashboard in Python — enabling clearer pattern identification and data-driven content decisions.",
+        "Quantified TikTok algorithm response signals for a new-account cold-start context by designing a weighted scoring model using Watch Full %, Save Rate, and Like Rate — avg views per video increased 141% W19→W20; ER trend improved from 4.8% to 7.0% across 5 tracked weeks.",
+        "Visualized weekly content performance across 23 published videos by building an HTML dashboard in Python — total 12,284 views, 154 saves, 603 likes, and 18 followers gained over W19–W23.",
       ],
       stack: ["Python", "Apify API", "HTML Dashboard", "Data Mining", "Weighted Scoring Model"],
-      outcome: "Avg views/video +141% week-over-week",
+      outcome: "12,284 total views · 23 videos · 18 followers · ER trend: 4.8% → 7.0% (W19–W23)",
       status: "in-progress",
       gallery: [
         {
           src: assetPath("/images/content-dashboard.png"),
-          caption: "Performance Dashboard — Built in Python. Tracks weekly Views trend, ER + Save Rate over time, and all-time per-episode breakdown across 16 published videos.",
+          caption: "Performance Dashboard — Built in Python. Tracks weekly Views trend, ER + Save Rate over time, and all-time per-episode breakdown across 23 published videos (W19–W23). Total: 12,284 views · 6.2% avg ER · 18 followers.",
         },
         {
           src: assetPath("/images/content-data-table.png"),
@@ -220,14 +220,15 @@ export const projects: Project[] = [
         {
           title: "Weekly KPI Dashboard",
           table: {
-            headers: ["Metric", "Target", "W19 Actual", "W20 Actual", "W21 Partial"],
+            headers: ["Metric", "Target", "W19", "W20", "W21", "W22", "W23"],
             rows: [
-              ["Avg Views / Video",   "> 800",    "295",     "710",      "~321"],
-              ["Engagement Rate",     "> 8%",     "~4.3%",   "~5.9%",    "5.34% avg"],
-              ["Save Rate",           "> 3%",     "~0.7%",   "~1.4%",    "~0.74%"],
-              ["Watch Full %",        "> 28%",    "~22%",    "~26.1%",   "~22.4%"],
-              ["Viral Score (best)",  "> 100",    "~60",     "145.9",    "TBD"],
-              ["New Followers/Week",  "growing",  "3",       "8",        "TBD"],
+              ["Total Views",         "—",        "~1,300",  "~5,000",   "~1,400",   "~1,400",  "~2,500"],
+              ["Avg Views / Video",   "> 800",    "260",     "714",      "233",      "~350",    "~625"],
+              ["Engagement Rate",     "> 8%",     "~4.8%",   "~6.0%",    "~6.2%",    "~7.0%",   "~7.0%"],
+              ["Save Rate",           "> 3%",     "~0.7%",   "~1.0%",    "~0.8%",    "~1.0%",   "~1.5%"],
+              ["Watch Full %",        "> 28%",    "~22%",    "~26.1%",   "~22.4%",   "~25%",    "~26%"],
+              ["Viral Score (best)",  "> 100",    "~60",     "145.9",    "~80",      "~90",     "~110"],
+              ["New Followers",       "growing",  "3",       "8",        "2",        "3",       "2"],
             ],
           },
         },
