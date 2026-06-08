@@ -2,7 +2,113 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
-import type { Project } from "./Projects";
+import type { Project, Section } from "./Projects";
+
+function SectionBlock({ section, accent }: { section: Section; accent: string }) {
+  return (
+    <div className="mb-8">
+      {/* Section title — same style as other section headers */}
+      <p className="text-[10px] text-[#9090a8] uppercase tracking-[0.2em] mb-4">
+        {section.title}
+      </p>
+
+      {/* Bullet list */}
+      {section.bullets && (
+        <ul className="space-y-3">
+          {section.bullets.map((b, i) => (
+            <li key={i} className="flex gap-3">
+              <span
+                className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0"
+                style={{ background: accent }}
+              />
+              <p className="text-sm text-[#48485e] leading-relaxed">{b}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Dataset list */}
+      {section.datasets && (
+        <div className="space-y-5">
+          {section.datasets.map((ds, i) => (
+            <div key={i}>
+              <p className="text-xs font-semibold text-[#0d0d14] mb-2">{ds.name}</p>
+              <ul className="space-y-1.5 pl-2">
+                {ds.bullets.map((b, j) => (
+                  <li key={j} className="flex gap-2.5">
+                    <span
+                      className="mt-2 w-1 h-1 rounded-full flex-shrink-0 opacity-60"
+                      style={{ background: accent }}
+                    />
+                    <p className="text-xs text-[#606078] leading-relaxed font-mono">{b}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Table */}
+      {section.table && (
+        <div className="overflow-x-auto rounded-xl" style={{ border: "1px solid rgba(0,0,0,0.08)" }}>
+          <table className="w-full text-xs border-collapse">
+            <thead>
+              <tr style={{ background: accent + "18" }}>
+                {section.table.headers.map((h, i) => (
+                  <th
+                    key={i}
+                    className="text-left px-3 py-2.5 font-semibold uppercase tracking-wide"
+                    style={{ color: accent, fontSize: "10px", borderBottom: `1px solid ${accent}30` }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {section.table.rows.map((row, ri) => (
+                <tr
+                  key={ri}
+                  style={{ background: ri % 2 === 0 ? "rgba(0,0,0,0.015)" : "transparent" }}
+                >
+                  {row.map((cell, ci) => (
+                    <td
+                      key={ci}
+                      className="px-3 py-2.5 text-[#48485e] leading-relaxed align-top"
+                      style={{
+                        borderBottom: ri < section.table!.rows.length - 1 ? "1px solid rgba(0,0,0,0.05)" : "none",
+                        fontWeight: ci === 0 ? 600 : 400,
+                        color: ci === 0 ? "#0d0d14" : "#48485e",
+                      }}
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Code block */}
+      {section.code && (
+        <div
+          className="rounded-xl p-4 overflow-x-auto"
+          style={{
+            background: "rgba(0,0,0,0.04)",
+            border: "1px solid rgba(0,0,0,0.08)",
+          }}
+        >
+          <pre className="text-[11px] text-[#48485e] leading-relaxed font-mono whitespace-pre">
+            {section.code}
+          </pre>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ProjectModal({
   project,
@@ -212,6 +318,21 @@ export default function ProjectModal({
                       ))}
                     </div>
                   </div>
+                </>
+              )}
+
+              {/* Documentation Sections */}
+              {project.details.sections && project.details.sections.length > 0 && (
+                <>
+                  <div className="h-px bg-[rgba(0,0,0,0.07)] my-8" />
+                  {project.details.sections.map((section, i) => (
+                    <div key={i}>
+                      <SectionBlock section={section} accent={project.accent} />
+                      {i < project.details.sections!.length - 1 && (
+                        <div className="h-px bg-[rgba(0,0,0,0.05)] mb-8" />
+                      )}
+                    </div>
+                  ))}
                 </>
               )}
             </div>
