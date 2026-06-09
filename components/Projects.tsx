@@ -116,8 +116,8 @@ export const projects: Project[] = [
       status: "in-progress",
       gallery: [
         {
-          src: assetPath("/images/content-dashboard.png"),
-          caption: "Performance Dashboard — Built in Python. Tracks weekly Views trend, ER + Save Rate over time, and all-time per-episode breakdown across 23 published videos (W19–W23). Total: 12,284 views · 6.2% avg ER · 18 followers.",
+          src: assetPath("/images/content-performance-dashboard.png"),
+          caption: "All-Time Dashboard (W19–W23, 23 videos) — Built in Python. Shows weekly Views trend, ER + Save Rate trend, and per-episode breakdown across all published videos. Total: 12,284 views · 154 saves · 6.2% avg ER · 18 followers.",
         },
         {
           src: assetPath("/images/content-data-table.png"),
