@@ -57,6 +57,7 @@ export default function Navigation() {
   const links = [
     { label: "Work", href: "#work", id: "work" },
     { label: "About", href: "#about", id: "about" },
+    { label: "Interview", href: "/interview", id: "interview", external: true },
   ];
 
   return (
@@ -108,7 +109,7 @@ export default function Navigation() {
             {/* Nav links with active indicator */}
             <nav className="hidden md:flex items-center gap-1 ml-2">
               {links.map((l) => {
-                const isActive = activeSection === l.id;
+                const isActive = !l.external && activeSection === l.id;
                 return (
                   <a
                     key={l.label}

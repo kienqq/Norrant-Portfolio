@@ -237,31 +237,157 @@ export const projects: Project[] = [
   },
   {
     id: "03",
-    title: "Sales Forecasting Pipeline",
-    category: "Machine Learning",
-    tags: ["Python", "LightGBM", "SHAP"],
-    year: "2026",
+    title: "USAID Global Health Supply Chain Analysis",
+    category: "Supply Chain Analytics",
+    tags: ["Python", "Pandas", "Logistics Audit"],
+    year: "2025",
     description:
-      "Multi-agent ML pipeline for manufacturing revenue forecasting — LightGBM with SHAP explainability, quantile regression for prediction intervals, data drift detection.",
-    color: "#0a0f1a",
-    accent: "#60a5fa",
-    image: assetPath("/images/sales-forecasting.svg"),
+      "Global health logistics audit across 7,020 international deliveries — shipment lineage consolidation, air vs. truck overlap matching, and retrospective audit simulation.",
+    color: "#0a192f",
+    accent: "#38bdf8",
+    image: assetPath("/images/usaid-dashboard.png"),
+    size: "large",
+    details: {
+      overview:
+        "Comprehensive logistics performance audit on historical ARV medicine and test kit shipments from the USAID Supply Chain Management System (SCMS). Reconstructed document lineage from 10,324 line items into 7,020 verified shipments, audited transit delay burdens across 43 countries, resolved freight mode confounding, and empirically evaluated audit priority rules via retrospective pilot simulation.",
+      approach: [
+        "Consolidated line-item data into 7,020 clean ASN/DN shipment batches; audited missingness mechanisms in freight cost reporting (88.2% numerical coverage).",
+        "Ranked country delay burden using a 30-day cap per delivery to prevent extreme outlier distortion; identified top 3 countries driving 42.4% of total delay days.",
+        "Uncovered Simpson's paradox in transportation modes: crude delay rate showed Truck (20.6%) higher than Air (8.5%), but exact cell matching on comparable lanes reversed the gap (Air 16.1% vs. Truck 14.1%).",
+        "Simulated 10% sampling review policies across 1,000 seeds on 928 test shipments to benchmark historical priority heuristics against uniform random auditing.",
+      ],
+      bullets: [
+        "Identified top 3 destination countries accounting for 42.4% of total shipment delay days across 7,020 deliveries by consolidating raw order lines into shipment records and tracking delay metrics in Python.",
+        "Uncovered hidden shipment delay trends between Air and Road transport by cleaning and grouping delivery data across product categories, fulfillment modes, and years.",
+        "Evaluated order review strategies across 928 test shipments by simulating priority rules against random selection to support realistic logistics audit planning.",
+      ],
+      stack: ["Python", "Pandas", "NumPy", "Statistical Audit", "Logistics KPI Design", "Wilson Score Intervals"],
+      outcome: "7,020 deliveries audited · 42.4% delay burden in top 3 countries · 25 comparable transport cells identified",
+      status: "complete",
+      gallery: [
+        {
+          src: assetPath("/images/usaid-dashboard.png"),
+          caption: "USAID SCMS Analytics Dashboard — Visual overview of 7,020 audited deliveries, tracking country late rates, 30-day capped delay burden, lead time distributions, and freight coverage.",
+        },
+        {
+          src: assetPath("/images/usaid-country-burden.png"),
+          caption: "Country Delay Burden (Capped at 30 days/shipment) — Pareto distribution of historical delay impact across destination countries: South Africa, Nigeria, and Mozambique represent the primary investigation backlog.",
+        },
+        {
+          src: assetPath("/images/usaid-air-truck.png"),
+          caption: "Air vs. Truck Delay Rate Comparison — Crude rate (Air 8.5% vs. Truck 20.6%) contrasted against exact matched overlap cells (Air 16.1% vs. Truck 14.1%), illustrating structural lane and product confounding.",
+        },
+        {
+          src: assetPath("/images/usaid-pilot-result.png"),
+          caption: "Retrospective Pilot Simulation (1,000 Seeds) — Benchmarking historical burden priority against random sampling on 928 completed shipments; demonstrates temporal risk shifts across calendar years.",
+        },
+      ],
+      sections: [
+        {
+          title: "Supply Chain Problem & Lineage Audit",
+          bullets: [
+            "Raw SCMS dataset contained 10,324 line items mapped across 6,233 PO/SO codes and 7,030 ASN/DN batches. Order lines shared single freight charges and customs declarations at the batch level.",
+            "Enforced strict document lineage: designated First Line items for batch freight/weight allocation while summing commodity value across sub-lines, ensuring zero double-counting.",
+            "Flagged 10 inconsistent shipments with conflicting delivery dates across lines, removing them from KPI calculations into a dedicated discrepancy log.",
+            "Freight cost analysis revealed non-random missingness: 593 shipments had freight included in commodity price and 239 were invoiced separately, proving that imputing zeroes would bias logistics economics.",
+          ],
+        },
+        {
+          title: "Analytical Milestones & Scorecard",
+          table: {
+            headers: ["Logistics Metric", "Audited Scope", "Empirical Value", "Operational Implication"],
+            rows: [
+              ["Network Scope", "Clean Deliveries", "7,020 ASN/DN", "10 excluded due to cross-line date discrepancies"],
+              ["Base Late Rate", "Delivered > Scheduled", "11.37% (798 orders)", "Median delay: 12.0 days; 90th percentile: 49.0 days"],
+              ["Severe Delays", "Delay ≥ 30 Days", "166 deliveries", "Concentrated primarily in southern African distribution corridors"],
+              ["Delay Burden Cap", "Sum min(Delay, 30d)", "11,344 days", "Mitigates outlier leverage (raw delay sum: 15,896 days)"],
+              ["Freight Reporting", "Valid Numeric Freight", "88.17% coverage", "$68.8M recorded freight; excludes separate billing channels"],
+              ["Lead Time (Direct)", "PO Sent → Delivered", "Median 98.0 days", "P90 of 214 days; requires buffer planning for direct drop lanes"],
+            ],
+          },
+        },
+        {
+          title: "Simpson's Paradox in Transportation Modes",
+          bullets: [
+            "Crude aggregate statistics suggested Truck deliveries had more than double the delay rate of Air shipments (20.6% vs. 8.5%).",
+            "Constructed a 4-dimensional stratification matrix (Country × Product Group × Fulfillment Channel × Delivered Year) with a minimum threshold of n ≥ 5 shipments per mode.",
+            "Identified 25 strictly comparable overlap cells (538 Air shipments, 568 Truck shipments). On identical shipping lanes, standardized delay rates reversed to Air 16.1% vs. Truck 14.1%.",
+            "Proved that crude mode comparisons were confounded by lane difficulty and emergency expediting rather than intrinsic carrier reliability, protecting operations from costly unwarranted mode shifts.",
+          ],
+        },
+        {
+          title: "Retrospective Audit Simulation Protocol",
+          bullets: [
+            "Evaluated the operational risk of using historical performance rankings to guide annual audit inspections (budgeted at 10% of completed deliveries, or ~92 shipments).",
+            "Tested on 928 shipments from 2014 against a 5,507-shipment training history (2006–2013) across 1,000 Monte Carlo seeds with strict temporal isolation.",
+            "Empirical finding: Historical burden priority achieved 0.0% severe delay recall in 2014 because severe bottlenecks shifted from historic leaders (South Africa) to newly congested regional corridors.",
+            "Demonstrated the operational necessity of combining dynamic leading indicators with static historical rankings rather than relying solely on past scorecard leaders.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "04",
+    title: "DataCo On-Time Delivery Risk Detection",
+    category: "Machine Learning & Ops",
+    tags: ["Python", "TimeSeriesSplit", "Risk Modeling"],
+    year: "2025",
+    description:
+      "Pre-dispatch late delivery risk detection across 62,897 supply chain orders — strict temporal validation, zero feature leakage, and cost-weighted operational dispatch thresholds.",
+    color: "#0f172a",
+    accent: "#818cf8",
+    image: assetPath("/images/dataco-thumbnail.svg"),
     size: "small",
     details: {
       overview:
-        "Designed a modular forecasting system for a make-to-stock manufacturer, addressing the asymmetric cost problem: underpredicting (stockout, lost orders) is more costly than overpredicting (excess inventory). Architecture built with agent-based modularity so each component can be updated independently as new data arrives.",
+        "Engineered a pre-dispatch risk classification model to identify delayed orders before warehouse release across 62,897 non-cancelled commercial supply chain transactions. Audited 53 raw attributes to eliminate transit-derived feature leakage, enforced expanding-window time series validation, and mapped decision thresholds to asymmetric operational penalty ratios.",
       approach: [
-        "Designed modular agent architecture: data audit → feature engineering → model training → SHAP explainability, so each layer can be updated independently as new production data arrives.",
-        "Configured LightGBM quantile regression for 90% prediction intervals to handle asymmetric stockout vs overstock cost — underpredicting carries higher business cost in this context.",
-        "Built a data drift detection module to flag distribution shifts as the time series expands, preventing stale model assumptions from compounding forecast errors.",
+        "Audited 53 tabular fields to eliminate post-dispatch data leakage (e.g., transit duration and post-shipment logs), restricting predictors strictly to pre-dispatch order attributes.",
+        "Focused classification on high-volume Standard Class shipments (57.3% base delay rate) where carrier interventions yield actionable dispatch routing flexibility.",
+        "Implemented out-of-time TimeSeriesSplit validation across chronologically ordered batches, preventing future data leakage common in randomized k-fold splits.",
+        "Calibrated dispatch decision thresholds under asymmetric business loss functions (penalizing missed late deliveries 5x to 10x higher than false alarm expedited checks).",
       ],
       bullets: [
-        "Designed a sales forecasting pipeline for manufacturing revenue prediction by building modular agents for data auditing, feature engineering, model training, and SHAP-based explainability in Python.",
-        "Addressed asymmetric forecasting risk in a make-to-stock context by configuring LightGBM quantile regression for 90% prediction intervals and implementing a data drift detection module for expanding time series data.",
+        "Flagged potential late delivery orders before warehouse dispatch across 62,897 orders by building a classification model focused on high-volume Standard Class shipments.",
+        "Ensured data integrity and realistic predictions across 53 fields by removing post-delivery information and applying time-based train-test validation.",
+        "Selected practical decision thresholds for dispatch teams by balancing the cost of missed late orders against the operational cost of false alarms.",
       ],
-      stack: ["Python", "LightGBM", "scikit-learn", "SHAP", "Optuna", "pandas"],
-      outcome: "In progress — architecture complete, awaiting production data",
-      status: "in-progress",
+      stack: ["Python", "Scikit-Learn", "Feature Engineering", "TimeSeriesSplit", "Cost-Sensitive Learning", "Supply Chain Risk"],
+      outcome: "62,897 orders analyzed · 0 post-dispatch data leakage · 5x-10x asymmetric penalty cost curve mapped",
+      status: "complete",
+      sections: [
+        {
+          title: "Operational Problem & Pre-Dispatch Boundary",
+          bullets: [
+            "Commercial supply chain operations require intervening before shipments leave the warehouse dock; predictions made after handover cannot be mitigated.",
+            "Mendeley DataCo dataset contains 180,519 order-item records (62,897 orders after filtering cancelled and invalid records). Standard Class represents over 60% of volume and suffers a 57.3% delay rate.",
+            "Audited all 53 dataset fields: identified and eliminated obvious data leakage columns (such as 'Days for shipping (real)', 'Delivery Status', and post-dispatch carrier timestamps) which artificially inflate model accuracy while making models useless in production.",
+            "Restricted model feature space strictly to pre-dispatch attributes: customer location, order scheduling, product category, order volume, and historical fulfillment latency.",
+          ],
+        },
+        {
+          title: "Feature Lineage & Temporal Validation",
+          table: {
+            headers: ["Feature Category", "Included Pre-Dispatch Signals", "Excluded Leakage Signals", "Operational Rationale"],
+            rows: [
+              ["Temporal Timing", "Order hour, day of week, scheduled prep days", "Days for shipping (real), delivery date", "Prevents target leakage from recorded actual transit"],
+              ["Customer Geography", "State, market region, zip code cluster", "Customer delivery confirmation status", "Enforces geographical routing constraints before carrier pickup"],
+              ["Product & Cart", "Category ID, product price, item quantity", "Late delivery risk tag (synthetic label)", "Captures warehouse pick/pack handling complexity"],
+              ["Shipping Mode", "Selected shipping class (Standard Class focus)", "Actual carrier transit log", "Standard Class offers the highest intervention leverage"],
+            ],
+          },
+        },
+        {
+          title: "Asymmetric Cost-Weighted Decision Engine",
+          bullets: [
+            "In commercial delivery operations, errors are fundamentally asymmetric: a False Negative (failing to detect an impending late delivery) causes customer churn, SLA penalties, and emergency re-shipments.",
+            "Conversely, a False Positive (inspecting or expediting an order that would have arrived on time) incurs only a minor carrier re-routing or audit labor cost.",
+            "Designed cost matrix weighting False Negatives at 5x to 10x the penalty of False Positives, shifting the operational decision threshold away from default 0.50.",
+            "Enabled dispatch supervisors to select operating points along the cost-tradeoff curve according to daily carrier capacity and warehouse staffing limits.",
+          ],
+        },
+      ],
     },
   },
 ];
